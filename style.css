@@ -2,14 +2,16 @@ h1, h2 {
   font-family: Lato;
 }  
 button{
-  width: 50px;
+  width: 40px;
+  height: 400px;
+}
+.buttonBottom{
+  
   height: 20px;
 }
 .bottomdiv{
-  position: fixed;
-  left: 0;
-  bottom:5;
-  width: 100%;  
+  display: inline;  
+  overflow: auto;
 }
 .rightdiv{
   position: fixed;
@@ -18,12 +20,11 @@ button{
   bottom: 0;
   width:10%;  
   height: 100%;
+  display: none;
 }
-.topdiv{
-  position: fixed;
-  top: 5;
-  bottom: 0;
-  width: 90%; 
+.topdiv{  
+  display: inline;  
+  overflow: auto;
 }
 audio{
   display: none;
