@@ -184,7 +184,7 @@ var context=null;
   //source1.play();
  //  source1.start(0);
    console.log(source1.buffer);
-    text1.value+="init OK ";
+    text1.value+="init OK11 ";
    // source2.start(2);
   //  source1.stop(3);
   //   console.log("c2:"+source1.context.currentTime);
@@ -287,22 +287,22 @@ for(i=0.0;i<data1.length;i+=cnt){
 	mj=mj+0.1;
 	if(ss>0.8){
 		createNote(ix,data1,i+mj);ix++;
-		console.log("m:"+ss+" mj:"+(mj+i)/48000.0);
+		//console.log("m:"+ss+" mj:"+(mj+i)/48000.0);
 	}
  }
- console.log("cnt:"+cnt);
- console.log("cnt1:"+cnt1);
+ //console.log("cnt:"+cnt);
+ //console.log("cnt1:"+cnt1);
     // fill the buffer with noise
     for (let i = 0; i < bufferSize; i++) {
         data[i] = Math.random() * 2 - 1;
         data[i]=data1[i];
     }
-    console.log(bufferSize);
-console.log(data);
+    //console.log(bufferSize);
+//console.log(data);
     // create a buffer source for our created data
     noise = audioCtx.createBufferSource();
     noise.buffer = buffer;
-console.log(noise);
+//console.log(noise);
     let bandpass = audioCtx.createBiquadFilter();
     bandpass.type = 'bandpass';
     bandpass.frequency.value = bandHz;
@@ -318,7 +318,7 @@ var iitt=0;
 function init1a(){
 	kk=0;
 	text1.value+=" init1a";;
-console.log(1000);
+//console.log(1000);
 cnt=0;
 cnt1=0;
 ix=1;
@@ -333,7 +333,7 @@ for(i=0.0;i<data1.length;i++){
      cnt++;
   }else{
      if(cnt>1800&& v>0.2){
-     	  console.log(ix+" ***m:"+v+" i:"+(i)/48000.0);
+     	  //console.log(ix+" ***m:"+v+" i:"+(i)/48000.0);
         tt[ix]=i;
           ix++;
        cnt=0;
@@ -357,7 +357,7 @@ function tta(){
 	//alert(iitt);
 	//if(audioCtx1==0) 
 //if(iitt==0)	
-console.log(1001);
+//console.log(1001);
  var audioCtx1 = new AudioContext();
 	iitt=1;
 	if(kk<=1){
@@ -370,7 +370,7 @@ console.log(1001);
 		kk++;
 	}
 //	if(!data1)data1 = source1.buffer.getChannelData(0); 
-	console.log(kk+" m ");
+	//console.log(kk+" m ");
 	noiseDuration=4;
 	  // fill the buffer with noise
    const bufferSize = audioCtx1.sampleRate * noiseDuration; // set the time of the note
@@ -402,8 +402,37 @@ console.log(1001);
 	     
 	   text1.value+=" keyon:"+kk;
 	}
+	
+	var list0 = [];
+	list0.push("CC");
+	list0.push("AA");
+	list0.push("BB");
+	console.log(list0.shift());
+	console.log(list0[0]);
+	var list1 = [];
+	function closea(){
+	 //console.log("closea"+list1.length);
+	 	if(list1.length>0){
+	 	a=list1[0];
+	 	
+	 	if(a.t<Date.now()){
+	 	a=list1.shift();
+	 		console.log(a.t-Date.now());
+	 		text1.value=" "+a.t-Date.now()
+	   a.ctx.close().then(function(){
+	   	  console.log("close");
+	   	}, function(){
+	   		alert("close1");
+	   	}
+	   );
+	 }
+	}
+  
+  }
+   var iv=window.setInterval( ( () =>closea()),10);
 	function keyon1(kk,t1,t2){
 		var audioCtx1 = new AudioContext();
+		list1.push({ctx:audioCtx1,t:t2*1000+Date.now()+100});
 		notebf[kk] = audioCtx1.createBufferSource();
   //console.log(notebf[kk]);
     notebf[kk].buffer = bbff[kk];
@@ -411,7 +440,7 @@ console.log(1001);
 	   notebf[kk].start(t1);
 	   notebf[kk].stop(t2);
 	     
-	   text1.value+=" keyon:"+kk;
+	   text1.value=" keyon:"+kk+" "+list1.length;
 	}
 Init();
 function keyona(){
@@ -421,9 +450,13 @@ keyon(7);
 }
 kkb=0;
 function keyonb(){
+	tx=0;
+	for(j=0;j<10;j++){
 	    for(i=0;i<15;i++){
-	      keyon1(i+1,i*0.5,i*0.5+0.4);
+	      keyon1(i+1,tx,tx+0.08);
+        tx+=0.1;
       }
+    }
 }
    </script>
   <textarea id="text1"  rows="4" cols="50">
