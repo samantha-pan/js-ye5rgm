@@ -1,0 +1,445 @@
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+  <link href="./style.css" rel="stylesheet">
+</head>
+
+<body style="position:fixed">
+ 
+  <div class="topdiv">
+    <button   ontouchend="keyup(1)" ontouchstart="keydown(1)"></button>
+    <button   ontouchend="keyup(2)" ontouchstart="keydown(2)"></button>
+    <button    ontouchend="keyup(3)" ontouchstart="keydown(3)"></button>
+    <button   ontouchend="keyup(4)" ontouchstart="keydown(4)"></button>
+    <button   ontouchend="keyup(5)" ontouchstart="keydown(5)"></button>
+    <button   ontouchend="keyup(6)" ontouchstart="keydown(6)"></button>
+    <button   ontouchend="keyup(7)" ontouchstart="keydown(7)"></button>
+    <button   ontouchend="keyup(8)" ontouchstart="keydown(8)"></button>
+    <button   ontouchend="keyup(9)" ontouchstart="keydown(9)"></button>
+    <button   ontouchend="keyup(10)" ontouchstart="keydown(10)"></button>
+    <button   ontouchend="keyup(11)" ontouchstart="keydown(11)"></button>
+    <button   ontouchend="keyup(12)" ontouchstart="keydown(12)"></button>
+    <button   ontouchend="keyup(13)" ontouchstart="keydown(13)"></button>
+    <button   ontouchend="keyup(14)" ontouchstart="keydown(14)"></button>
+  </div>
+  <div class="rightdiv">
+    <button   ontouchend="keyup(15)" ontouchstart="keydown(15)"></button>
+    <button   ontouchend="keyup(16)" ontouchstart="keydown(16)"></button>
+    <button   ontouchend="keyup(17)" ontouchstart="keydown(17)"></button>
+    <button   ontouchend="keyup(18)" ontouchstart="keydown(18)"></button>
+    <button   ontouchend="keyup(19)" ontouchstart="keydown(19)"></button>
+    <button   ontouchend="keyup(20)" ontouchstart="keydown(20)"></button>
+    <button   ontouchend="keyup(21)" ontouchstart="keydown(21)"></button>
+  </div>
+  <div class="bottomdiv">
+     
+      <textarea id="text1" rows="4" cols="50">
+
+      </textarea>
+        <BR>
+        <button  onclick="init1a()">1</button>
+        <button  onclick="keyona()">k1</button>
+        <button  onclick="keyonb()">k2</button>
+        <button  onclick="keyon(3)">k3</button>
+        <button  onclick="keyon(4)">k4</button>
+        <button  onclick="keyon(5)">k5</button>
+        <button  onclick="keyon(6)">k6</button>
+        <button  onclick="keyon(7)">k7</button>
+        <button  onclick="init()">3</button>
+        <button  onclick="init1(4)">4</button>
+        <button  onclick="init1(5.2)">5</button>
+        <button  onclick="init2()">pause</button>
+      
+        <audio controls id="a01" ontimeupdate="ut1()"  >
+          <source src="A0925.m4a">
+        </audio>
+  
+  <script type=text/javascript>
+
+ var context;
+ var bufferLoader;
+var tt=new Array();
+tt[1]=2.14;
+tt[2]=6.03;
+tt[3]=9.99;
+tt[4]=14.03;
+tt[5]=18.00;
+tt[6]=22.04;
+tt[7]=26.01;
+tt[8]=29.98;
+tt[9]=34.02;
+tt[10]=37.99;
+tt[11]=42.10;
+tt[12]=	45.99;
+tt[13]=50.04;
+tt[14]=54.00;
+tt[15]=58.05;
+tt[16]=62.01;
+tt[17]=65.98;
+tt[18]=70.02;
+tt[19]=73.99;
+tt[20]=78.03;
+tt[21]=82.00;
+
+kk=0;
+
+document.addEventListener('keydown', function(e) {
+  console.log(e);
+  keydown(e.key	);
+});
+
+document.addEventListener('keyup', function(e) {
+  keyup(e.key);
+});
+
+function BufferLoader(context, urlList, callback) {
+  this.context = context;
+  this.urlList = urlList;
+  this.onload = callback;
+  this.bufferList = new Array();
+  this.loadCount = 0;
+}
+BufferLoader.prototype.loadBuffer = function(url, index) {
+  // Load buffer asynchronously
+  var request = new XMLHttpRequest();
+ 
+  
+  request.open("GET", url, true);
+  
+  request.responseType = "arraybuffer";
+
+  var loader = this;
+
+  request.onload = function() {
+    // Asynchronously decode the audio file data in request.response
+    console.log(request.response.length);
+    console.log(request.response);
+    aa=request.response;
+    var aa1 = new Int8Array(aa);
+   // for(i=0;i<1000;i++)console.log(aa1[i]);
+    loader.context.decodeAudioData(
+      aa,
+      function(buffer) {
+        if (!buffer) {
+          alert('error decoding file data: ' + url);
+          return;
+        }
+        console.log(buffer.length);
+      //  console.log(buffer);
+        loader.bufferList[index] = buffer;
+        if (++loader.loadCount == loader.urlList.length)
+          loader.onload(loader.bufferList);
+      },
+      function(error) {
+        console.error('decodeAudioData error', error);
+      }
+    );
+  }
+
+  request.onerror = function() {
+    alert('BufferLoader: XHR error');
+  }
+
+  request.send();
+}
+/*
+navigator.requestMIDIAccess()
+  .then(function(access) {
+
+     // Get lists of available MIDI controllers
+     const inputs = access.inputs.values();
+     const outputs = access.outputs.values();
+
+     access.onstatechange = function(e) {
+
+       // Print information about the (dis)connected MIDI controller
+       console.log(e.port.name, e.port.manufacturer, e.port.state);
+     };
+  });
+*/
+BufferLoader.prototype.load = function() {
+  for (var i = 0; i < this.urlList.length; ++i){
+   this.loadBuffer(this.urlList[i], i);
+  // alert(this.urlList[i]);
+  }
+}
+var context=null;
+    function Init(){
+    	
+    if(context==null) context = new AudioContext();
+    bufferLoader = new BufferLoader(
+          context,
+          [
+            'A0926.m4a'
+          ],
+          finishedLoading 
+        );
+    bufferLoader.load();
+    console.log(bufferLoader);
+    
+ }
+
+     function finishedLoading(bufferList){
+   //  alert(bufferList[0].length);
+    //make two sources and play them
+     source1 = context.createBufferSource();
+    var source2 = context.createBufferSource();
+    source1.buffer = bufferList[0];
+    source2.buffer = bufferList[0];
+  
+
+    source1.connect(context.destination);
+    source2.connect(context.destination);
+  // context.resume();
+  source1.context.currentTime=3;
+  console.log("c1:"+source1.context.currentTime);
+  //source1.play();
+ //  source1.start(0);
+   console.log(source1.buffer);
+    text1.value+="init OK ";
+   // source2.start(2);
+  //  source1.stop(3);
+  //   console.log("c2:"+source1.context.currentTime);
+  // console.log(source1.context.currentTime);
+  //alert("IIIIOK");
+  init1a();
+ }
+ tend=0;
+ function ut1(){
+ console.log(a01.currentTime);
+ //  if(a01.currentTime>tend)a01.pause();
+ }
+ function keydown(e){
+ keyon(e);
+ }
+ keyee=5;
+ ss="";
+ function keydown1(){
+   keyon(keyee);
+   ss=ss+";"+keyee;
+   keyee++;
+   if(keyee<10){
+   	setTimeout(keydown1,1000);
+   	return;
+   }	alert(ss);
+   text1.value="";
+   	keyee=5;ss="";
+ }
+ 
+ 
+ function keyup(e) {
+ 	 notebf[e].stop(0.1);
+ 	//kk=1;
+ 	//setTimeout(init1a,100);
+}
+
+
+
+
+
+
+function slowAlert(){
+  
+   a01.pause();
+}
+//const AudioContext = window.AudioContext || window.webkitAudioContext;
+var bbff=new Array();
+var ctx=new Array();
+const audioCtx = new AudioContext();
+
+function createNote(ix,bfr,i0){
+  Duration=4;
+    const bufferSize = audioCtx.sampleRate * Duration; // set the time of the note
+     bbff[ix] = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate); // create an empty buffer
+    let data = bbff[ix].getChannelData(0); // get data
+for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+        data[i]=bfr[i+i0];
+    }
+  
+   ctx[ix]= audioCtx.createBufferSource();
+    ctx[ix].buffer = bbff[ix];
+
+
+    // connect our graph
+    ctx[ix].connect(audioCtx.destination);
+    console.log("create note:"+ix+" i0:"+i0);
+  // ctx[ix].start(0);
+}
+function playNoise(time) {
+
+/*console.log(document.querySelector('audio'));
+s1=audioCtx.createMediaElementSource(document.querySelector('audio'));
+source1=s1.context.createBufferSource();
+console.log(source1);
+s1.connect(audioCtx.destination);
+source1.start(0);
+return;
+console.log(source1);
+*/
+noiseDuration=8;
+ bandHz=440;
+    const bufferSize = audioCtx.sampleRate * noiseDuration; // set the time of the note
+     buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate); // create an empty buffer
+    let data = buffer.getChannelData(0); // get data
+  data1 = source1.buffer.getChannelData(0); // get data
+t=0;
+cnt=48000;
+cnt1=0;
+ix=1;
+for(i=0.0;i<data1.length;i+=cnt){
+	ss=0;
+	mj=0;
+	for(j=0;j<cnt;j++){
+		if(ss<Math.abs(data1[i+j])){
+			ss=Math.abs(data1[i+j]);
+			mj=j;
+		}
+	}
+	mj=mj+0.1;
+	if(ss>0.8){
+		createNote(ix,data1,i+mj);ix++;
+		console.log("m:"+ss+" mj:"+(mj+i)/48000.0);
+	}
+ }
+ console.log("cnt:"+cnt);
+ console.log("cnt1:"+cnt1);
+    // fill the buffer with noise
+    for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+        data[i]=data1[i];
+    }
+    console.log(bufferSize);
+console.log(data);
+    // create a buffer source for our created data
+    noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+console.log(noise);
+    let bandpass = audioCtx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.value = bandHz;
+
+    // connect our graph
+    noise.connect(audioCtx.destination);
+ //   noise.start(0);
+}
+
+
+var data1;
+var iitt=0;
+function init1a(){
+	kk=0;
+	text1.value+=" init1a";;
+console.log(1000);
+cnt=0;
+cnt1=0;
+ix=1;
+
+if(iitt==0){
+	iitt=1;
+	data1 = source1.buffer.getChannelData(0); 
+st=0;
+for(i=0.0;i<data1.length;i++){
+  v=Math.abs(data1[i]);
+  if(v<0.01){
+     cnt++;
+  }else{
+     if(cnt>1800&& v>0.2){
+     	  console.log(ix+" ***m:"+v+" i:"+(i)/48000.0);
+        tt[ix]=i;
+          ix++;
+       cnt=0;
+     }
+     
+  }
+ }
+}
+tta();
+//alert("iitt");
+}
+
+
+buffer=0;
+//var audioCtx1;
+var notebf = new Array();
+
+function tta(){	
+	//alert(kk);
+	//kk=10;
+	//alert(iitt);
+	//if(audioCtx1==0) 
+//if(iitt==0)	
+console.log(1001);
+ var audioCtx1 = new AudioContext();
+	iitt=1;
+	if(kk<=1){
+	//a01.currentTime=2.0;
+	}
+	//a01.pause();
+	if(kk>32){
+		return;
+	}else{
+		kk++;
+	}
+//	if(!data1)data1 = source1.buffer.getChannelData(0); 
+	console.log(kk+" m ");
+	noiseDuration=4;
+	  // fill the buffer with noise
+   const bufferSize = audioCtx1.sampleRate * noiseDuration; // set the time of the note
+    
+   //if(buffer==0)
+   bbff[kk] = audioCtx1.createBuffer(1, bufferSize, audioCtx.sampleRate); // create an empty buffer
+    let data = bbff[kk].getChannelData(0); // get data
+
+    for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+        data[i]=data1[i+tt[kk]];
+    }
+	// notebf[kk] = audioCtx1.createBufferSource();
+  //console.log(notebf[kk]);
+    //notebf[kk].buffer = bbff[kk];
+    //    notebf[kk].connect(audioCtx1.destination);
+  //  notebf[kk].start(0);
+	  //notebf[kk].stop(0.48);
+	   tta();
+	  // text1.value+="OK:"+kk;
+	}
+	function keyon(kk){
+		var audioCtx1 = new AudioContext();
+		notebf[kk] = audioCtx1.createBufferSource();
+  //console.log(notebf[kk]);
+    notebf[kk].buffer = bbff[kk];
+        notebf[kk].connect(audioCtx1.destination);
+	   notebf[kk].start(0);
+	     
+	   text1.value+=" keyon:"+kk;
+	}
+	function keyon1(kk,t1,t2){
+		var audioCtx1 = new AudioContext();
+		notebf[kk] = audioCtx1.createBufferSource();
+  //console.log(notebf[kk]);
+    notebf[kk].buffer = bbff[kk];
+        notebf[kk].connect(audioCtx1.destination);
+	   notebf[kk].start(t1);
+	   notebf[kk].stop(t2);
+	     
+	   text1.value+=" keyon:"+kk;
+	}
+Init();
+function keyona(){
+   keyon(1);
+   keyon(4);
+keyon(7);
+}
+kkb=0;
+function keyonb(){
+	    for(i=0;i<15;i++){
+	      keyon1(i+1,i*0.5,i*0.5+0.4);
+      }
+}
+   </script>
+  
+</body>
+
+</html>
