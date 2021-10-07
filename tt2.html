@@ -190,7 +190,7 @@ var context=null;
   //   console.log("c2:"+source1.context.currentTime);
   // console.log(source1.context.currentTime);
   //alert("IIIIOK");
-  init1a();
+//  init1a();
  }
  tend=0;
  function ut1(){
@@ -216,7 +216,9 @@ var context=null;
  
  
  function keyup(e) {
- 	 notebf[e].stop(0.1);
+ 	// notebf[e].stop(0.1);
+ 	
+ notebf[e].context.close();
  	//kk=1;
  	//setTimeout(init1a,100);
 }
@@ -233,7 +235,7 @@ function slowAlert(){
 //const AudioContext = window.AudioContext || window.webkitAudioContext;
 var bbff=new Array();
 var ctx=new Array();
-const audioCtx = new AudioContext();
+//const audioCtx = new AudioContext();
 
 function createNote(ix,bfr,i0){
   Duration=4;
@@ -346,51 +348,59 @@ tta();
 //alert("iitt");
 }
 
+function makeWave(ctx,notes){
+    duration=0;
+   
+    for(i=0;i<notes.length;i++){
+       duration+=notes[i].d;
+       console.log(notes[i]);
+    }
+    const bufferSize = duration; // set the time of the note
+  
+    abf = ctx.createBuffer(1, bufferSize, ctx.sampleRate); // create an empty buffer
+    let data = abf.getChannelData(0); // get data
+    k=0;
+    for(i=0;i<notes.length;i++){
+    	console.log(tt[notes[i].n]/ctx.sampleRate+" "+duration/ctx.sampleRate);
+       for(j=0;j<notes[i].d;j++){
+         data[k++]=data1[tt[notes[i].n]+j];
+       }
+    }
+    console.log(k);
+    notebf = ctx.createBufferSource();
+    notebf.buffer=abf;
+    notebf.connect(ctx.destination);
+    notebf.start(0);
+    setTimeout((function(){
+    	ctx.close();
+    	}),(duration*1000)/ctx.sampleRate+1000);
+	  notebf.stop(duration/ctx.sampleRate);
+}
+    
 
 buffer=0;
 //var audioCtx1;
 var notebf = new Array();
 
 function tta(){	
-	//alert(kk);
-	//kk=10;
-	//alert(iitt);
-	//if(audioCtx1==0) 
-//if(iitt==0)	
-//console.log(1001);
  var audioCtx1 = new AudioContext();
-	iitt=1;
-	if(kk<=1){
-	//a01.currentTime=2.0;
-	}
-	//a01.pause();
-	if(kk>32){
-		return;
-	}else{
-		kk++;
-	}
-//	if(!data1)data1 = source1.buffer.getChannelData(0); 
-	//console.log(kk+" m ");
-	noiseDuration=4;
-	  // fill the buffer with noise
-   const bufferSize = audioCtx1.sampleRate * noiseDuration; // set the time of the note
-    
-   //if(buffer==0)
-   bbff[kk] = audioCtx1.createBuffer(1, bufferSize, audioCtx.sampleRate); // create an empty buffer
+	while(1){
+  	if(kk>32){
+	  	text1.value+="...ok";
+     break;
+	  }else{
+		 kk++;
+	  }
+   	noiseDuration=4;
+    const bufferSize = audioCtx1.sampleRate * noiseDuration; // set the time of the note
+  
+    bbff[kk] = audioCtx1.createBuffer(1, bufferSize, audioCtx1.sampleRate); // create an empty buffer
     let data = bbff[kk].getChannelData(0); // get data
 
     for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
         data[i]=data1[i+tt[kk]];
     }
-	// notebf[kk] = audioCtx1.createBufferSource();
-  //console.log(notebf[kk]);
-    //notebf[kk].buffer = bbff[kk];
-    //    notebf[kk].connect(audioCtx1.destination);
-  //  notebf[kk].start(0);
-	  //notebf[kk].stop(0.48);
-	   tta();
-	  // text1.value+="OK:"+kk;
+  }
 	}
 	function keyon(kk){
 		var audioCtx1 = new AudioContext();
@@ -399,8 +409,8 @@ function tta(){
     notebf[kk].buffer = bbff[kk];
         notebf[kk].connect(audioCtx1.destination);
 	   notebf[kk].start(0);
-	     
-	   text1.value+=" keyon:"+kk;
+	     if(text1.value.length>40)text1.value=" ";
+	   text1.value =" keyon:"+kk;
 	}
 	
 	var list0 = [];
@@ -429,7 +439,7 @@ function tta(){
 	}
   
   }
-   var iv=window.setInterval( ( () =>closea()),10);
+ //  var iv=window.setInterval( ( () =>closea()),200);
 	function keyon1(kk,t1,t2){
 		var audioCtx1 = new AudioContext();
 		list1.push({ctx:audioCtx1,t:t2*1000+Date.now()+100});
@@ -450,6 +460,16 @@ keyon(7);
 }
 kkb=0;
 function keyonb(){
+	var t = new AudioContext();
+  	   notes=[];
+  	   console.log(111);
+  	  for(i=0;i<15;i++){
+        notes.push({n:i+1,d:t.sampleRate/8});
+      }   
+       console.log(222);
+         makeWave(t,notes);
+}
+function keyonb1(){
 	tx=0;
 	for(j=0;j<10;j++){
 	    for(i=0;i<15;i++){
@@ -476,8 +496,6 @@ function keyonb(){
 				<button type="button" onclick="init1(5.2)">5</button>
    	<button type="button" onclick="init2()">pause</button>
    	
-   	<audio controls id="a01" ontimeupdate="ut1()"   style="display1:none;">
-  <source src="A0925.m4a" >
-  </audio>
+   
    </body>
    </html>
