@@ -1,0 +1,530 @@
+<html>
+	<meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+ 
+ 
+ <head>
+  <script type="application/javascript">
+  	window.navigator.standalone;
+  	BW=0.7;
+  	kbWidth=50;
+  	BKX =new Array();
+  	KM = new Array();
+  	KM[10] = 1;
+  	KM[15] = 2;
+  	KM[20] = 3;
+  	KM[25] = 4;
+  	KM[30] = 5;
+  	KM[40] = 6;
+  	KM[45] = 7;
+  	KM[50] = 8;
+  	KM[55] = 9;
+  	KM[60] = 10;
+  	KM[65] = 11;
+  	KM[70] = 12;
+  	KM[80] = 13;
+  	KM[85] = 14;
+  	KM[90] = 15;
+  	KM[95] = 16;
+  	KM[100] = 17;
+  	KM[110] = 18;
+  	KM[115] = 19;
+  	KM[120] = 20;
+  	KM[125] = 21;
+  	KM[130] = 22;
+  	KM[135] = 23;
+  	KM[140] = 24;
+  	
+  	xy=800;
+  	
+  	//	document.addEventListener('mousemove',eett1);
+  
+keyPlay=-1;  	 
+ccnt=0;
+sss="";
+  	 function eett_end(e) {
+  	   if(keyPlay>=1)keyup(keyPlay);
+  	   keyPlay=-1;
+  	}
+  	 function eett(e) {
+  // p1.value="PP";
+ 
+var canvas = document.getElementById("canvas");
+ var rect = canvas.getBoundingClientRect();
+      
+   var x = e.touches[0].clientX-rect.left;//-document.body.offsetWidth
+   var y = e.touches[0].clientY-rect.top;//-document.body.offsetHeight;
+ //s=e.type+"(x="+x+" y="+y+")"+window.innerWidth+" "+window.innerHeight;;
+  na1=Math.floor(x/kbWidth)+1;
+   tKey=na1*10;
+   if(x<na1*kbWidth+kbWidth/2)na1--;
+//canvas.height-150,kbWidth/2, 30);
+//ctx.moveTo(x, canvas.height-150);
+//ctx.lineTo(x, canvas.height-50);
+var b1 = document.getElementById("b1");
+
+x0=0;
+if(y<canvas.height-150-50){
+	tKey=0;
+}else{
+	if(y<canvas.height-150+50){
+		 if( BKX[na1])x0= BKX[na1];
+		 if(x>x0 && x<x0+(BW*kbWidth))
+		  tKey=na1*10+5;
+	}
+}
+//alert(tKey);
+
+bhh=document.body.offsetHeight;
+  s="tKey:"+tKey+ "y:"+y +" x:"+x+" x0:["+x0+"]";//+(bhh)+"  "+(canvas.height);
+if(tKey!=keyPlay||1){
+   if(tKey>=10){
+   	s+="A";
+   	 //text1.value+="tkey1";
+     eett_end(e);
+     //text1.value+="tkey2";
+     keyPlay=KM[tKey];
+    s=keyPlay+" "+tKey;
+     keyon(keyPlay);
+     //s+="C";
+sss+=s;
+ccnt++;
+if(ccnt>10){
+  //alert(sss);
+  ccnt=0;
+  sss="";
+}
+     //text1.value+="tkey3";
+  }
+  
+  var canvas = document.getElementById("canvas");
+  if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "rgb(200,200,200)";
+        ctx.fillRect (100, bhh, 660,60);
+        ctx.font = "30px Arial";
+    ctx.strokeText(s+" "+e.touches.length, 100, bhh+40);
+ }
+
+
+}else{
+   sss+=";";
+}
+
+
+      
+}
+ 
+  window.addEventListener('orientationchange', function () {
+    setTimeout( draw,100);
+    
+  }, true);
+ 
+    function draw() {
+    	
+    	const el = document.documentElement;
+   
+       var canvas = document.getElementById("canvas");
+     canvas.width=window.innerWidth;
+     canvas.height=window.innerHeight-50;
+    
+      if (canvas.getContext) {
+   
+        var ctx = canvas.getContext("2d");
+     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+     
+        ctx.fillStyle = "rgba(255,255, 255, 0.5)";
+ /*       
+        ctx.fillRect (0, 0, canvas.width, xy);
+        
+        for(i=0;i<=canvas.height;i+=20){
+        	tt=0;
+        	if(i==0)tt=40;
+        		if(i>canvas.height-40)tt=40;
+        	ctx.beginPath();
+ctx.moveTo(30, i);
+ctx.lineTo(100+tt, i);
+ctx.stroke();
+        	
+        }
+return;
+*/
+na=1;
+na1=1;
+      for(x=0;x<canvas.width;x+=kbWidth){
+    switch(na){
+    	case 1:
+      case 2:
+      case 4:
+      case 5:
+      case 6:{
+     BKX[na1]=x+kbWidth*(1-BW/2);
+      	ctx.fillStyle = "rgb(0,0,0)";
+      	
+        ctx.fillRect (x+kbWidth*(1-BW/2), canvas.height-150-30,kbWidth*BW, 30+30);
+         break;
+       }
+    }
+na++;na1++;
+if(na>7)na=1;
+      ctx.beginPath();
+ctx.moveTo(x, canvas.height-150);
+ctx.lineTo(x, canvas.height-50);
+ctx.stroke();
+}
+      }
+    }
+  function BufferLoader(context, urlList, callback) {
+  this.context = context;
+  this.urlList = urlList;
+  this.onload = callback;
+  this.bufferList = new Array();
+  this.loadCount = 0;
+}
+BufferLoader.prototype.loadBuffer = function(url, index) {
+  // Load buffer asynchronously
+  var request = new XMLHttpRequest();
+ 
+  
+  request.open("GET", url, true);
+  
+  request.responseType = "arraybuffer";
+
+  var loader = this;
+
+  request.onload = function() {
+    // Asynchronously decode the audio file data in request.response
+    console.log(request.response.length);
+    console.log(request.response);
+    aa=request.response;
+    var aa1 = new Int8Array(aa);
+   // for(i=0;i<1000;i++)console.log(aa1[i]);
+    loader.context.decodeAudioData(
+      aa,
+      function(buffer) {
+        if (!buffer) {
+          alert('error decoding file data: ' + url);
+          return;
+        }
+        console.log(buffer.length);
+      //  console.log(buffer);
+        loader.bufferList[index] = buffer;
+        if (++loader.loadCount == loader.urlList.length)
+          loader.onload(loader.bufferList);
+      },
+      function(error) {
+        console.error('decodeAudioData error', error);
+      }
+    );
+  }
+
+  request.onerror = function() {
+    alert('BufferLoader: XHR error');
+  }
+
+  request.send();
+}
+   
+function BufferLoader(context, urlList, callback) {
+  this.context = context;
+  this.urlList = urlList;
+  this.onload = callback;
+  this.bufferList = new Array();
+  this.loadCount = 0;
+}
+BufferLoader.prototype.loadBuffer = function(url, index) {
+  // Load buffer asynchronously
+  var request = new XMLHttpRequest();
+ 
+  
+  request.open("GET", url, true);
+  
+  request.responseType = "arraybuffer";
+
+  var loader = this;
+
+  request.onload = function() {
+    // Asynchronously decode the audio file data in request.response
+    console.log(request.response.length);
+    console.log(request.response);
+    aa=request.response;
+    var aa1 = new Int8Array(aa);
+   // for(i=0;i<1000;i++)console.log(aa1[i]);
+    loader.context.decodeAudioData(
+      aa,
+      function(buffer) {
+        if (!buffer) {
+          alert('error decoding file data: ' + url);
+          return;
+        }
+        console.log(buffer.length);
+      //  console.log(buffer);
+        loader.bufferList[index] = buffer;
+        if (++loader.loadCount == loader.urlList.length)
+          loader.onload(loader.bufferList);
+      },
+      function(error) {
+        console.error('decodeAudioData error', error);
+      }
+    );
+  }
+
+  request.onerror = function() {
+    alert('BufferLoader: XHR error');
+  }
+
+  request.send();
+}
+/*
+navigator.requestMIDIAccess()
+  .then(function(access) {
+
+     // Get lists of available MIDI controllers
+     const inputs = access.inputs.values();
+     const outputs = access.outputs.values();
+
+     access.onstatechange = function(e) {
+
+       // Print information about the (dis)connected MIDI controller
+       console.log(e.port.name, e.port.manufacturer, e.port.state);
+     };
+  });
+*/
+BufferLoader.prototype.load = function() {
+  for (var i = 0; i < this.urlList.length; ++i){
+   this.loadBuffer(this.urlList[i], i);
+  // alert(this.urlList[i]);
+  }
+}
+var context=null;
+    function Init(){
+    	//return;
+    if(context==null) context = new AudioContext();
+    bufferLoader = new BufferLoader(
+          context,
+          [
+            'A0926.m4a'
+          ],
+          finishedLoading 
+        );
+    bufferLoader.load();
+    console.log(bufferLoader);
+    
+ }
+
+     function finishedLoading(bufferList){
+   //  alert(bufferList[0].length);
+    //make two sources and play them
+     source1 = context.createBufferSource();
+    var source2 = context.createBufferSource();
+    source1.buffer = bufferList[0];
+    source2.buffer = bufferList[0];
+  
+
+    source1.connect(context.destination);
+    source2.connect(context.destination);
+  // context.resume();
+  source1.context.currentTime=3;
+  console.log("c1:"+source1.context.currentTime);
+  //source1.play();
+ //  source1.start(0);
+   console.log(source1.buffer);
+    //text1.value+="init OK ";
+   // source2.start(2);
+  //  source1.stop(3);
+  //   console.log("c2:"+source1.context.currentTime);
+  // console.log(source1.context.currentTime);
+  //alert("IIIIOK");
+  init1a();
+  	document.addEventListener('touchstart',eett);
+  	document.addEventListener('touchend',eett_end);
+  	document.addEventListener('touchmove',eett);
+alert("OK");
+ }
+ function dragst(){
+return false;
+}
+ document.addEventListener('ondragstart()',dragst);
+  	document.addEventListener('touchstart',eett);
+ 	document.addEventListener('touchend',eett_end);
+ 	document.addEventListener('touchmove',eett);
+ tend=0;
+ function ut1(){
+ console.log(a01.currentTime);
+ //  if(a01.currentTime>tend)a01.pause();
+ }
+var bbff=new Array();
+var ctx=new Array();
+const audioCtx = new AudioContext();
+
+function createNote(ix,bfr,i0){
+  Duration=4;
+    const bufferSize = audioCtx.sampleRate * Duration; // set the time of the note
+     bbff[ix] = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate); // create an empty buffer
+    let data = bbff[ix].getChannelData(0); // get data
+for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+        data[i]=bfr[i+i0];
+    }
+  
+   ctx[ix]= audioCtx.createBufferSource();
+    ctx[ix].buffer = bbff[ix];
+
+
+    // connect our graph
+    ctx[ix].connect(audioCtx.destination);
+    console.log("create note:"+ix+" i0:"+i0);
+  // ctx[ix].start(0);
+}
+function playNoise(time) {
+
+/*console.log(document.querySelector('audio'));
+s1=audioCtx.createMediaElementSource(document.querySelector('audio'));
+source1=s1.context.createBufferSource();
+console.log(source1);
+s1.connect(audioCtx.destination);
+source1.start(0);
+return;
+console.log(source1);
+*/
+noiseDuration=8;
+ bandHz=440;
+    const bufferSize = audioCtx.sampleRate * noiseDuration; // set the time of the note
+     buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate); // create an empty buffer
+    let data = buffer.getChannelData(0); // get data
+  data1 = source1.buffer.getChannelData(0); // get data
+t=0;
+cnt=48000;
+cnt1=0;
+ix=1;
+for(i=0.0;i<data1.length;i+=cnt){
+	ss=0;
+	mj=0;
+	for(j=0;j<cnt;j++){
+		if(ss<Math.abs(data1[i+j])){
+			ss=Math.abs(data1[i+j]);
+			mj=j;
+		}
+	}
+	mj=mj+0.1;
+	if(ss>0.8){
+		createNote(ix,data1,i+mj);ix++;
+		console.log("m:"+ss+" mj:"+(mj+i)/48000.0);
+	}
+ }
+ console.log("cnt:"+cnt);
+ console.log("cnt1:"+cnt1);
+    // fill the buffer with noise
+    for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+        data[i]=data1[i];
+    }
+    console.log(bufferSize);
+console.log(data);
+    // create a buffer source for our created data
+    noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+console.log(noise);
+    let bandpass = audioCtx.createBiquadFilter();
+    bandpass.type = 'bandpass';
+    bandpass.frequency.value = bandHz;
+
+    // connect our graph
+    noise.connect(audioCtx.destination);
+ //   noise.start(0);
+}
+
+var tt=new Array();
+var data1;
+var iitt=0;
+function init1a(){
+	kk=0;
+	//text1.value+=" init1a";;
+console.log(1000);
+cnt=0;
+cnt1=0;
+ix=1;
+
+if(iitt==0){
+	iitt=1;
+	data1 = source1.buffer.getChannelData(0); 
+st=0;
+alert(data1.length);
+for(i=0.0;i<data1.length;i++){
+  v=Math.abs(data1[i]);
+  if(v<0.01){
+     cnt++;
+  }else{
+     if(cnt>1800&& v>0.2){
+     	  console.log(ix+" ***m:"+v+" i:"+(i)/48000.0);
+        tt[ix]=i;
+          ix++;
+       cnt=0;
+     }
+     
+  }
+ }
+}
+tta();
+//alert("iitt");
+}
+
+
+buffer=0;
+//var audioCtx1;
+var notebf = new Array();
+
+
+	function keyup(e) {
+ 	 //notebf[e].stop(0);
+ 
+ 	 setTimeout(function(){ 
+ 	 	notebf[e].context.close();
+ 	 	}, 300);
+ 	//setTimeout(init1a,100);
+}
+	function tta(){	
+ var audioCtx1 = new AudioContext();
+	while(1){
+  	if(kk>32){
+	  	alert("...ok");
+     break;
+	  }else{
+		 kk++;
+	  }
+   	noiseDuration=4;
+    const bufferSize = audioCtx1.sampleRate * noiseDuration; // set the time of the note
+  
+    bbff[kk] = audioCtx1.createBuffer(1, bufferSize, audioCtx1.sampleRate); // create an empty buffer
+    let data = bbff[kk].getChannelData(0); // get data
+
+    for (let i = 0; i < bufferSize; i++) {
+        data[i]=data1[i+tt[kk]];
+    }
+  }
+	}
+	function keyon(kk){
+		var audioCtx1 = new AudioContext();
+		notebf[kk] = audioCtx1.createBufferSource();
+  //console.log(notebf[kk]);
+ // alert(kk+" "+	notebf[kk]);
+    notebf[kk].buffer = bbff[kk];
+        notebf[kk].connect(audioCtx1.destination);
+	   notebf[kk].start(0);
+	  //  if(text1.value.length>40)text1.value=" ";
+	  // text1.value =" keyon:"+kk;
+	}
+	
+Init();
+
+  </script>
+ </head>
+  
+ <body id="b1"  onload="draw()" style="position:fixed;" ondragstart="return false;" >
+  	<button onclick="keyon(1)">1</button>
+  	<br>
+   <canvas id="canvas"  width="600" height="810" style="position:absolute;"   ondragstart="return false;"></canvas>
+   
+   
+    </body>
+</html>
