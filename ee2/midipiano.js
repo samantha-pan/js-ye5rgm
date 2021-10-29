@@ -2,10 +2,10 @@
  	
   oct=0;
   keyshift=0;
-  	octk=3;
+  	octk=4;
   	BW=0.9;
-  	kbWidth=20;
-  	kbHeight=150;
+  	kbWidth=50;
+  	kbHeight=120;
   	BKX =new Array();
   	KM = new Array();
   	b1=0;b2=1;
@@ -34,9 +34,35 @@ keyPlay=-1;
 ccnt=0;
 sss="";
 eettFG=0;
+  	 BEAT_ON=0;
   	 function eett_end(e) {
+  	 	//consolelog("TSE:"+e.touches.length);
+  	   
+  	   if(e.touches.length==1){
+  	   	 var rect = canvasAA.getBoundingClientRect();
+	       xx=e.touches[0].clientX-rect.left;
+	       yy=e.touches[0].clientY-rect.top
+        	k=Math.floor(xx/80);
+	       if(!(k==0&&yy<40) ){
+  	         BEAT_ON=0;
+  	         BEAT_CNT++;
+  	         return;
+  	     }
+  	   }else{
+  	     if(BEAT_ON==1){
+  	         BEAT_ON=0;
+  	         BEAT_CNT++;
+  	         return;
+  	     }
+  	   }
+  	     
   	   if(keyPlay>=1)keyoff(keyPlay);
   	   keyPlay=-1;
+  	   if(playNote0>0){
+  	     noteoff(playNote0);
+  	     playNote0=-1;
+  	  }
+  	   
   	}
 //////////////////////////////////////////////////////// 
   
@@ -44,13 +70,78 @@ eettFG=0;
 kkAlt["C"]=0;
 kkAlt["Bb"]=-2;
 kkAlt["Eb"]=3;
+playMode=0;;
+ BEAT_CNT=0;
+ 
+ 
+function chgBeat(xx,yy){
+ 	if(yy<canvasAA.height-kbHeight)return false;
+  if(yy>canvasAA.height-kbHeight+50)return false; 	
+ 	k=Math.floor(xx/60);
+ switch(k){
+ 	case 4:
+ 	case 5:
+ 	case 6:
+ 	case 7:
+    MMLOG[EDPOS].d=k-3;
+    EDRR();
+}
+ 	consolelog("chgB:"+k);
+ 	return true;
+}
+ 
   function eett(e) {
- // 	alert(1234);
+   // 	alert(1234)
 eettFG=1;
 	 var rect = canvasAA.getBoundingClientRect();
-	 //alert(e.touches[0].clientY+" "+rect.top);
-	eett1(e.touches[0].clientX-rect.left,e.touches[0].clientY-rect.top);
+	 // console.log(e.touches[0].clientY+" *** "+rect.top);
+	  //consolelog("tslen:"+e.touches.length);
+	  for(i=0;i<e.touches.length;i++){
+	  xx=e.touches[i].clientX-rect.left;
+	  yy=e.touches[i].clientY-rect.top
+	  if(yy>=canvasAA.height-kbHeight-30){
+       if(playMode==1){
+         if(playNote0>0)noteoff(noteoff);
+		     
+		     a=MMLOG[EDPOS];
+         playNote0=a.n;
+         noteon(a.n,126,0);
+      
+      EDPOS++;
+      //consolelog("POS:"+EDPOS);
+      draw_noteb();
+      if(EDPOS>=MMLOG.length)EDPOS=0;
+      
+       continue;
+    }
+  }
+ 	
+ 	if(playMode==2){
+ 		if(chgBeat(xx,yy))return;
+ 	 
+ 	}
+ 	k=Math.floor(xx/80);
+	
+	if(e.type=="touchstart"&&(k==0&&yy<80 )|| yy<20){
+		//k=Math.floor(xx/80);
+
+	  switch(k){
+	     case 0:PLAY_LOG();break;
+	     case 1:up();break;
+	     case 2:down();break;
+	     case 3:EDLL();break;
+	     case 4:EDRR();break;
+	     case 5:delNote();break;
+	     case 7:alert(logdata);break;
+	     case 8:playMMLOG();break;
+	  }
+	  continue;
+	}
+	if(playMode==0)	eett1(xx,yy);
+  chgEDPOS(xx,yy);
+ }
 }
+
   function eett1(x,y) {
   na1=Math.floor(x/kbWidth)+1+keyshift;
    tKey=na1*10;
@@ -114,6 +205,10 @@ bhh=document.body.offsetHeight;
     setTimeout( draw,100);
     
   }, true);
+
+
+bnN=[" PLAY","    +12","    -12","      <","      >","  Del"," "," LOG "," PLAY"];
+
  
      function draw() {
     	console.log("canvasdraw");
@@ -122,9 +217,15 @@ bhh=document.body.offsetHeight;
    
        var canvas = document.getElementById("canvas");
 
-     canvas.width=window.innerWidth;
+     canvas.width=window.innerWidth+200;
    //  set1.left=window.innerWidth-100;
-     canvas.height=window.innerHeight-100;
+     canvas.height=window.innerHeight-10;
+     canvas.top=0;
+     if(window.innerHeight>600){
+       kbHeight=150;
+    }else{
+    	//octk=4;
+    }
     console.log(canvas.getContext);
 console.log("canvas.heighta:"+canvas.height);
   
@@ -165,7 +266,54 @@ switch(keyshift){
   case 5:na10=10;break;
   case 6:na10=12;break;
 }
+console.log("AAAAA:"+bnN[2]);
+for(i=0;i<12;i++){
+	 //if(i%2==0){
+	 	ctx.beginPath();
+ctx.rect(i*80,0,80, 30);
+ctx.stroke();
+		   switch(playMode){
+		      case 0:bnN[8]="KEYIN";break;
+          case 1:bnN[8]="STEP";break;
+          case 2:bnN[8]="BEAT";break;
+		   }
 
+ ctx.font = "12px Arial";
+//if(noteToKey[note+n00]){
+ 	ctx.fillStyle = "rgb(99,99,99)";
+  ctx.fillText(bnN[i], i*80+2,20);
+	}
+
+if(playMode!=2)
+  draw_piano();      
+else draw_beat();    
+      //console.log("draw");
+    }
+ function draw_beat(){
+
+beat_name=["  4","  3","  2"," .","  1","  1/2","  1/3","  1/4","  1/5","  1/6","  1/8"," "];
+for(i=0;i<10;i++){
+	 //if(i%2==0){
+	 	ctx.beginPath();
+ctx.rect(i*60,canvas.height-kbHeight,60, 50);
+ctx.stroke();
+		  
+
+ ctx.font = "20px Arial";
+//if(noteToKey[note+n00]){
+ 	ctx.fillStyle = "rgb(99,99,99)";
+  ctx.fillText(beat_name[i], i*60+2,canvas.height-kbHeight+20);
+	}
+
+}
+  function BufferLoader(context, urlList, callback) {
+  this.context = context;
+  this.urlList = urlList;
+  this.onload = callback;
+  this.bufferList = new Array();
+  this.loadCount = 0;
+}
+function draw_piano(){
 note=na10+octk*12-3;
 console.log("keyshift:"+keyshift+" na10:"+na10+" na:"+note	);
       for(x=0;x<canvas.width&&note<108;x+=kbWidth){
@@ -207,19 +355,8 @@ ctx.font = "10px Arial";
 //}
 }
       }
-      
-      
-      //console.log("draw");
-    }
- 
-  function BufferLoader(context, urlList, callback) {
-  this.context = context;
-  this.urlList = urlList;
-  this.onload = callback;
-  this.bufferList = new Array();
-  this.loadCount = 0;
-}
 
+}
    
 var bbff=new Array();
 var ctx=new Array();
@@ -257,7 +394,7 @@ var notebf = new Array();
 // 				console.log(MIDI.GM.byId[instrument].id, instrument, channelId);
 				return;
 			}
-
+console.log(delay);
 			/// convert relative delay to absolute delay
 			if (delay < audioCtx1.currentTime) {
 				delay += audioCtx1.currentTime;
@@ -306,26 +443,42 @@ function noteoff(noteId,delay){
 				}
 			}
 		}
+		
+		
+		
 	qpers=120.0	 ;
+	playNote0=-1;
 	function playMMLOG(){
-		   delay=0;
-		   
-		   console.log(MMLOG.length);
+		   EDPOS=0;
+		   if(playMode<2){
+		    	playMode++;
+		   }else{
+		   	 playMode=0;
+		   }
+		   consolelog("playMode:"+playMode);
+		   draw();
+     return; 
+}
+
+
+function PLAY_LOG(){
+			   delay=0;
       for(i=0;i<MMLOG.length;i++){
       	 a=MMLOG[i];
          noteon(a.n,126,delay);
          delay = delay + 60.0 /(a.d*qpers)	;
          noteoff(a.n,delay);
-         console.log(delay);
       }
-      //MMLOG=[];
-      console.log("eee");
       
 	}
+	
+	
+	EDIT_MODE=1;
 	function keyon(kk1){
 		noteId=kk1+octk*12-2+oct+kkAlt[altkey.value];
 		console.log("a:"+noteId);
-		if(isLOGON==1){
+		if(isLOGON==1||EDIT_MODE==1){
+			if(isLOGON==0)MM_DURATION=2;
 			var a={d:MM_DURATION,n:noteId};
 		   if(a.d==99){
 		    if(MMLOG.length>0){
@@ -335,7 +488,10 @@ function noteoff(noteId,delay){
 		    	a.d=1;
 		    }
 		  }
+		   EDPOS=MMLOG.length;
+		   consolelog(BEAT_CNT+":NOTE:"+a.n);
 		   MMLOG.push(a);
+		   
 		 //  console.log(MMLOG);
 		   draw_noteb();
 		}
@@ -406,7 +562,7 @@ function makeNotes(){
 			var name = number2key[n % 12] + octave;
 			keyToNote[name] = n;
 			noteToKey[n] = name;
-			console.log(n+" "+name);
+		//	console.log(n+" "+name);
 		}
 }
 var bufferList=new Array();
@@ -426,6 +582,7 @@ var bufferList=new Array();
 
 
 function up(){
+//	alert("octk:"+octk);
 	if(octk<8){
 		 octk++;
 		draw();
@@ -492,10 +649,10 @@ function loadaa(){
 loadaa();
 console.log("draw..");
 draw();
-draw_notea();
+//draw_notea();
 	document.addEventListener('touchstart',eett);
   document.addEventListener('touchend',eett_end);
-  	document.addEventListener('touchmove',eett);
+  	//document.addEventListener('touchmove',eett);
   	document.addEventListener('mousemove',mousemove);
    document.addEventListener('mousedown',mousedown);
    document.addEventListener('mouseup',mouseup);
@@ -506,15 +663,34 @@ console.log(11111111111);
 //alert(canvasAA);
 }
 
+isPOSSET=0;
+function chgEDPOS(mxx,myy){
+      //consolelog("x:"+mxx+" y:"+myy+"y1:"+yy_line_1+",xx:"+xx_left);
+	    if(myy>=yy_line_1-line_h*5 && myy<=yy_line_2+line_h*5){
+	       if(mxx>=xx_left){
+	         EDPOS=Math.floor(((mxx-xx_left)+(line_h/2))/(line_h*2))+xx_org;
+	         //consolelog("chg:"+EDPOS);
+	         if(EDPOS>=MMLOG.length){
+	         	   EDPOS=MMLOG.length-1;
+	         	   //consolelog("chg1:"+EDPOS);
+	         	   if(EDPOS<0)EDPOS=0;
+             
+	        }
+	          isPOSSET=1;
+	          draw_noteb();
+	          
+	       }
+	    }
+
+}
 
 mxx=0;
 myy=0;
 function mousedown(e){
 	if(eettFG)return;
-	//if(e.keyCode==32||e.keyCode==66){
 	    eett1(mxx,myy);
-	    //console.log(mxx+" "+myy);
-	//	}
+	    if(playMode!=0)chgEDPOS(mxx,myy);
+	 
 }
 function mouseup(e){
 	if(eettFG)return;
@@ -592,7 +768,13 @@ function ckeydown(ev) {
 	     case 190 :  MM_DURATION=99;break;
 	     case 86 :  MM_DURATION=0.5;break;
 	   }
-	   eett1(mxx,myy);
+	   console.log("POSSET:"+isPOSSET);
+	   if(isPOSSET==0){
+	     eett1(mxx,myy);   
+	   }else{	   
+	   	  MMLOG[EDPOS].d=MM_DURATION;
+	      EDRR();
+	   }
 	    return;	
 	}
 	e=ev.keyCode;
