@@ -9,12 +9,9 @@
   }
     function draw_note1(d1,xx,len,flat,period){
     	flat=flat||' ';
-    	if(len!='d'){
+    	
       	ctx_n.fillStyle = "rgba(0,0,0,0.9)";
-      }else{
-       	ctx_n.fillStyle = "rgba(200,200,200,0.9)";
-     
-      }
+      
         yy=yy_line_1+5*line_h-(d1*(line_h/2));
          ctx_n.beginPath();
          ctx_n.ellipse(3*line_h+xx, yy, (line_h/2), (line_h*0.8)/2, 0, 0, (2)* Math.PI);
@@ -69,23 +66,21 @@ function EDLL(){
    
 }
 function EDRR(){
-    if(EDPOS+1<MMLOG[CHNID].length)EDPOS++;
+    if(EDPOS+1<MMLOG.length)EDPOS++;
     draw_noteb();
-    	consolelog("EDPOS:"+EDPOS);
+    //consolelog("EDPOS:"+EDPOS);
 }
 function delNote(){
 //	alert("del:"+EDPOS);
-  MMLOG[CHNID].splice(EDPOS,1);
+  MMLOG.splice(EDPOS,1);
   
-  if(MMLOG[CHNID].length<=EDPOS){
+  if(MMLOG.length<=EDPOS){
     if(EDPOS>0)EDPOS--;
   }
   draw_noteb();
  }
  gcc=0;
  xx_org=0;
- cvs=new Array();
-for(i=0;i<3;i++) cvs[i]="canvas_n"+i;
 function draw_note(P1) {
     	
     //	const outputs = access.outputs.values();
@@ -93,46 +88,37 @@ function draw_note(P1) {
     	 
     	//alert(P1[0]);
     	i=1234;
-    	console.log(cvs);
-    	
-      var canvas = document.getElementById(cvs[CHNID]);
+      var canvas = document.getElementById("canvas_n");
       //consolelog("vs1n	:"+canvas.height);
       
-     // canvas.width=2000;
+      canvas.width=2000;
       
-      //canvas.height=200;
-     // canvas.style.top=500*CHNID;
+      canvas.height=500;
       //	consolelog("QQQQ"+gcc);
       if (canvas.getContext) {
-      
-      	trec=canvas.getBoundingClientRect();
-      	console.log(trec);
-      	canvas.width=window.innerWidth-40;
       	console.log(i);
         ctx_n = canvas.getContext("2d");
          ctx_n.clearRect(0,0, canvas.width, 400);
-// ctx_n.moveTo(0,1400);
-       //  ctx_n.lineTo(300,1400);
-        // ctx_n.stroke();
-
-       ctx_n.fillStyle = "rgb(10,10,0)";
-       ctx_n.font = "12px Arial";
-       	ctx_n.fillStyle = "rgb(0,0,0)";
-          ctx_n.fillText(instruments[INS_IX[CHNID]],10,10);
-       
-     
-       yy_line_1=line_h*5+00*CHNID;
-       console.log("yy_line_1:"+yy_line_1);	
-      for( i=0;i<line_h*5;i+=line_h){	
+ ctx_n.moveTo(0,1400);
+         ctx_n.lineTo(300,1400);
+         ctx_n.stroke();
+      // ctx_n.fillStyle = "rgb(10,10,0)";
+      // ctx_n.fillRect (10, 10, 55, 50);
+      line_h=6;
+       if(window.innerHeight>600){
+      	line_h=10;
+      }
+       yy_line_1=line_h*15;
+      for( i=0;i<line_h*5;i+=line_h){
   	   ctx_n.moveTo(10,yy_line_1+i);
-       ctx_n.lineTo( canvas.width,yy_line_1+i);
+       ctx_n.lineTo(2000,yy_line_1+i);
       	ctx_n.strokeStyle= "rgba(200,200,200,1";
         ctx_n.stroke();
         yy_line_2=yy_line_1+i;
       }
       xx=5*line_h;
       xx_org=0;
-      while((EDPOS-xx_org)*(line_h*2)>canvas.width-100){
+      while((EDPOS-xx_org)*(line_h*2)>canvasAA.width*0.6){
          xx_org++;
       }
       xx_left=xx+3*line_h;
@@ -157,10 +143,9 @@ function draw_note(P1) {
           d1=(P1[j][i]-'1');
           if(P1[j][i]<P1[0][i])d1+=7;
          // alert(d1);
-          d1+= (P1[6][i]-'3')*7;
-          console.log(d1);
+          d1+= (P1[6][i]-'2')*7;
           d1a[i]=d1;
-          draw_note1(d1,xx,P1[5][i] ,P1[7][i],P1[8][i]);
+          draw_note1(d1,xx,0,P1[7][i],P1[8][i]);
         }
         if(t0!=P1[5][i] || btc==0||trepc>=3){
         	trepc=0;
@@ -190,7 +175,7 @@ function draw_note(P1) {
         	      	txx=(line_h);
         	      }
         	    //beam 1
-        	    if(t0!='1' &&t0!='d'){
+        	    if(t0!='1'){
         	       ctx_n.moveTo((line_h*3)+xx0+(line_h/2)-txx,1+yy1+tyy);
                  ctx_n.lineTo((line_h*3)+xx01+(line_h/2),1+yy2);
                  ctx_n.stroke();
@@ -241,7 +226,6 @@ function draw_note(P1) {
         xx=xx+(line_h*2);
         btc1=96;
         switch(P1[5][i]){
-        		case 'd':btc1=96*2;break;
         	case '1':btc1=96;break;
         	case '-':btc1=48;break;
         	case '=':btc1=24;break;
@@ -255,7 +239,7 @@ function draw_note(P1) {
       //  console.log("bt0:"+btc);
         if(btc>=96*4){
         	var rect = canvasAA.getBoundingClientRect();
-        	consolelog("btc2:"+btc+" w:"+canvas.width+" xx:"+xx);
+        	consolelog("btc2:"+btc+" w:"+canvasAA.width+" xx:"+xx);
         	ctx_n.moveTo((line_h*3)+xx-mx,yy_line_1);
          ctx_n.lineTo ((line_h*3)+xx-mx,yy_line_1+(line_h*4));
          ctx_n.stroke();
@@ -266,7 +250,7 @@ function draw_note(P1) {
       }
       ctx_n.moveTo((line_h*4)+posxx-line_h,yy_line_1-(line_h*4));
          ctx_n.lineTo ((line_h*4)+posxx-line_h,yy_line_1+(line_h*10));
-         	ctx_n.strokeStyle= "rgba(255,0,0,0.9)";
+         	ctx_n.strokeStyle= "rgba(255,0,0,0.3)";
          ctx_n.stroke();
          console.log(posxx);
       

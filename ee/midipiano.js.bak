@@ -673,60 +673,6 @@ function down(){
    }
 }
 var instruments=[];
-
-
-	pending=0;
-	function loadAudio(ins_ix,url, key) {
-	
-			var base64 = url.split(',')[1];
-			  
-				var buffer = Base64Binary.decodeArrayBuffer(base64);
-				pending++;
-				actx.decodeAudioData(buffer, 
-				  function(buffer1){
-				       j=keyToNote[key];
-			        bbff[ins_ix*88+j]=	buffer1;
-					    pending--;
-		//			     console.log(ins_ix+" "+"Note:"+j+" key:"+key+"pending:"+pending);
-					},function(){
-					alert("decodeAudioData error :"+key);
-					}
-				);
-		};
-	
-
-function AddInst(){
-
-	addscript();
-		for (var key in MIDI.Soundfont) {
-
-      for(j=0;j<instruments.length;j++){
-       if(instruments[j]==key)break;
-      }
-      if(j<instruments.length){
-      	continue;
-      }else{
-      	var opt = document.createElement('option');
-    opt.value = key;
-    opt.innerHTML = key;
-    s1.appendChild(opt);
-		    instruments.push(key);
-		    instrument=instruments[j];
-	var urls = [];
-			var notes = keyToNote;
-
-			for (var key in notes) urls.push(key);
-	 for(i=0;i<urls.length;i++){
-		key=urls[i];
-	   loadAudio(j,MIDI.Soundfont[instrument][key],key );
-   }
-		   
-		    console.log("addins:"+instrument);
-		    return;  
-	    }
-	  }
-}
-
 function loadaa(){
 	 if(!keyToNote)alert( keyToNote);
 	makeNotes();
@@ -751,7 +697,7 @@ function loadaa(){
 	//tx1.value+="\nrlslen "+urls.length;
 	j=0;
 	pending=0;
-	function loadAudioa(ins_ix,url, key) {
+	function loadAudio(ins_ix,url, key) {
 	
 			var base64 = url.split(',')[1];
 			  
@@ -779,9 +725,6 @@ function loadaa(){
   }
 }
 function test1(){
-	addscript();
-}
-function addscript(){
 	console.log(tx1.value);
  var script = document.createElement('script');
 					script.language = 'javascript';
@@ -801,13 +744,7 @@ function addscript(){
 	function load() {
 	//	myModal.style.display = "block";msdcnt=1;
 		console.log("12345");
-		 line_h=6;
-       if(window.innerHeight>600){
-      	line_h=10;
-      	drnote_div.style.height=300;
-      }else{
-     // drnote_div.height=250;
-      }
+		
 setTimeout(load100,5000);
 	tx1.value="t=0;"
 tx1.value+="\nfor(i=60;i<72;i++){";

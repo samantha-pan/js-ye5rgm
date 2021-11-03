@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<p>
+Please specify a file, or a set of files:<br>
+<input id="if1" type="file" name="datafile" size="40">
+</p>
+
+<textarea id="tx2" name="y" style="width:400px;height:150px;"></textarea>
+<script>
+document.getElementById('if1')
+  .addEventListener('change', getFile)
+
+function getFile(event) {
+	console.log(111);
+	const input = event.target
+  if ('files' in input && input.files.length > 0) {
+  	 const reader = new FileReader();
+
+  reader.addEventListener("load", () => {
+    // this will then display a text file
+    tx2.value = reader.result;
+   console.log(input.files[0]);
+  }, false);
+
+  if (input.files[0]) {
+    reader.readAsText(input.files[0]);
+  }
+}
+  
+}
+
+function placeFileContent(target, file) {
+	readFileContent(file).then(content => {
+  	target.value = content
+  }).catch(error => console.log(error))
+}
+
+function readFileContent(file) {
+	const reader = new FileReader()
+  return new Promise((resolve, reject) => {
+    reader.onload = event => resolve(event.target.result)
+    reader.onerror = error => reject(error)
+    reader.readAsText(file)
+  })	
+}
+
+</script>
+
+
+</html>

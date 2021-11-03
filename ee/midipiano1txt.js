@@ -25,9 +25,7 @@
   	KM[70+b1] = 12+b2;
     b1+=70;b2+=12;
   }
-  CHNID=0;
-  MMLOG=new Array();
-  for(i=0;i<3;i++)MMLOG[i]=[];
+  MMLOG=[];
   	//alert(11);
   		xy=800;
   	
@@ -78,16 +76,7 @@ kkAlt["Bb"]=-2;
 kkAlt["Eb"]=3;
 playMode=0;;
  BEAT_CNT=0;
-function chgCHNID(){
-   if(CHNID<2){
-   	CHNID++;
-  }else{
-     CHNID=0;
-  }   
-  console.log("CHNID"+CHNID);
-  draw();
-  draw_noteb();
-}
+ 
  function execCMD(k){
  	console.log("ee:"+k);
 switch(k){
@@ -98,18 +87,16 @@ switch(k){
 	     case 2:down();break;
 	     case 3:EDLL();break;
 	     case 4:EDRR();break;
-	     case 6:INS_IX[CHNID]++;
-	            if((INS_IX[CHNID]+1)*88>bbff.length)
-	              INS_IX[CHNID]=0;
-	            instrument_offset[CHNID]=INS_IX[CHNID]*88;
+	     case 6:INS_IX++;
+	            if((INS_IX+1)*88>bbff.length)
+	              INS_IX=0;
+	            instrument_offset=INS_IX*88;
 	            draw();
 	            break;
 	     case 5:delNote();break;
 	     case 7:alert(logdata);break;
-	     case 8:chgplayMODE();break;
+	     case 8:playMMLOG();break;
 	      case 9: myModal.style.display = "block";msdcnt=1;break;
-	      case 10:chgCHNID();break;
-	    
 	  }
 }
 
@@ -119,18 +106,33 @@ function chgBeat(xx,yy){
  	k=Math.floor(xx/60);
  switch(k){
 //k = 0:"  2",1: " 1.",2: "  1",3: " 1/2 .",4: "  2/1", 5: "  1/3", 6: "  1/4", 7: "  1/5",8: "  1/6",9: "  1/8"," "];
- 	case 0:MMLOG[CHNID][EDPOS].d=0.5;EDRR();break;
- 	case 2:MMLOG[CHNID][EDPOS].d=1;;EDRR();break;
- 	case 1:MMLOG[CHNID][EDPOS].p="1";MMLOG[CHNID][EDPOS].d=1/1.5;EDRR(); 	break;
- 	case 3:MMLOG[CHNID][EDPOS].p="1";MMLOG[CHNID][EDPOS].d=2/1.5;EDRR(); 	break;
+ 	case 0:MMLOG[EDPOS].d=0.5;EDRR();break;
+ 	case 2:MMLOG[EDPOS].d=1;;EDRR();break;
+ 	case 1:MMLOG[EDPOS].p="1";MMLOG[EDPOS].d=1/1.5;EDRR(); 	break;
+ 	case 3:MMLOG[EDPOS].p="1";MMLOG[EDPOS].d=2/1.5;EDRR(); 	break;
  	case 4:case 5:	case 6:	case 7: case 8: 
-    MMLOG[CHNID][EDPOS].d=k-2;    EDRR();break;
-  case 9:MMLOG[CHNID][EDPOS].d=8;;EDRR();break;
+    MMLOG[EDPOS].d=k-2;    EDRR();break;
+  case 9:MMLOG[EDPOS].d=8;;EDRR();break;
 }
  	consolelog("chgB:"+k);
  	return true;
 }
 ifg=0;
+function test1(){
+	console.log(tx1.value);
+ var script = document.createElement('script');
+					script.language = 'javascript';
+					script.type = 'text/javascript';
+				  var ttt="function a01(){";
+				  ttt+=tx1.value;
+				  ttt+="}";
+					script.text = ttt;
+				
+					document.body.appendChild(script);
+					ifg=1;
+			a01();
+console.log(tx1.innerText);
+}
 
   function eett(e) {
   	if(msdcnt==1)return;
@@ -146,14 +148,14 @@ eettFG=1;
        if(playMode==1){
          if(playNote0>0)noteoff(noteoff);
 		     
-		     a=MMLOG[CHNID][EDPOS];
+		     a=MMLOG[EDPOS];
          playNote0=a.n;
          noteon(a.n,126,0);
       draw_noteb();
       EDPOS++;
       //consolelog("POS:"+EDPOS);
       
-      if(EDPOS>=MMLOG[CHNID].length)EDPOS=0;
+      if(EDPOS>=MMLOG.length)EDPOS=0;
       
        continue;
     }
@@ -241,10 +243,9 @@ bhh=document.body.offsetHeight;
   }, true);
 
 
-bnN=["PLAY","+12","-12","<",">","Del"," "," LOG ","PLAY","...","CHN 0"];
+bnN=["PLAY","+12","-12","<",">","Del"," "," LOG ","PLAY","..."	];
 
- INS_IX=new Array();
-for(i=0;i<3;i++)INS_IX[i]=0;
+ INS_IX=0;
      function draw() {
     	console.log("canvasdraw");
   
@@ -307,8 +308,7 @@ switch(playMode){
           case 1:bnN[8]="STEP";break;
           case 2:bnN[8]="BEAT";break;
 		   }
-		   bnN[10]="CHN:"+CHNID;
-		   bnN[6]=instruments[INS_IX[CHNID]].substring(instruments[INS_IX[CHNID]].length-6,instruments[INS_IX[CHNID]].length);//instruments[INS_IX].length-6,6);
+		   bnN[6]=instruments[INS_IX].substring(instruments[INS_IX].length-6,instruments[INS_IX].length);//instruments[INS_IX].length-6,6);
 for(i=0;i<12;i++){
 	 //if(i%2==0){
 	 	ctx.beginPath();
@@ -422,13 +422,12 @@ var notebf = new Array();
 	octk==3;
 	var sources=new Array();
 	var audioCtx1 = new AudioContext();
-	instrument_offset=new Array();
-	for(i=0;i<3;i++)instrument_offset[i]=0;
+	instrument_offset=0;
 	function noteon( noteId, velocity, delay) {
 			delay = delay || 0;
       velocity = velocity || 120;
 			/// check whether the note exists
-			var buffer = bbff[instrument_offset[CHNID]+noteId];
+			var buffer = bbff[instrument_offset+noteId];
 			if (!buffer) {
 // 				console.log(MIDI.GM.byId[instrument].id, instrument, channelId);
 				return;
@@ -454,18 +453,18 @@ console.log(delay);
 				source.start(delay || 0);
 			
 			///
-			sources[CHNID+" "+noteId] = source;
+			sources[noteId] = source;
 		}
 	
 function noteoff(noteId,delay){
 		delay = delay || 0;
-			var buffer = bbff[instrument_offset[CHNID]+noteId];
+			var buffer = bbff[instrument_offset+noteId];
 			if (buffer) {
 				if (delay < audioCtx1.currentTime) {
 					delay += audioCtx1.currentTime;
 				}
 				///
-				var source = sources[CHNID+" "+noteId];
+				var source = sources[noteId];
 				if (source) {
 					if (source.gainNode) {
 						// @Miranet: 'the values of 0.2 and 0.3 could of course be used as 
@@ -476,7 +475,7 @@ function noteoff(noteId,delay){
 						gain.linearRampToValueAtTime(-1.0, delay + 0.3);
 					}
 							source.stop(delay + 0.5);
-					delete sources[CHNID+" "+noteId];
+					delete sources[noteId];
 					///
 					
 				}
@@ -487,7 +486,7 @@ function noteoff(noteId,delay){
 		
 	qpers=120.0	 ;
 	playNote0=-1;
-	function chgplayMODE(){
+	function playMMLOG(){
 		   EDPOS=0;
 		   if(playMode<2){
 		    	playMode++;
@@ -504,10 +503,10 @@ function PLAY_LOG1(){
 			   delay=0;
 			  // console.log("playcnt:"+playcnt);
       if(playcnt>0){
-          noteoff(MMLOG[CHNID][playcnt-1].n,0);
+          noteoff(MMLOG[playcnt-1].n,0);
       }
-      if(playcnt<MMLOG[CHNID].length){
-      	 a=MMLOG[CHNID][playcnt];
+      if(playcnt<MMLOG.length){
+      	 a=MMLOG[playcnt];
       	 //console.log("PLAY:"+i);
          noteon(a.n,126,0);
          EDPOS=playcnt;
@@ -523,29 +522,12 @@ function PLAY_LOG1(){
      // console.log(t);
       setTimeout(PLAY_LOG1,Math.floor(t));
 	}
-function PLAY_LOGA(){
+function PLAY_LOG(){
 playcnt=0;
 PLAY_LOG1();
 }	
-function PLAY_LOG(){
-	chnid1=CHNID;
-	console.log("PLAY_LOG");
-	for(CHNID=0;CHNID<3;CHNID++){
-	console.log("PLAY_LOG:"+CHNID);
-	t=0;
-	  for(i=0;i<MMLOG[CHNID].length;i++){
-	      a=MMLOG[CHNID][i];
-	      console.log(CHNID+":"+a.n);
-	       noteon(a.n,126,t);
-	       dd=60.0 /(a.d*qpers);
-	       noteoff(a.n,t+dd);
-	       t+=dd;
-	  }
-	}
-	CHNID=chnid1;
-	draw_noteb();
-}	
-	EDIT_MODE=1;
+	
+	EDIT_MODE=0;
 	function keyon(kk1){
 		noteId=kk1+octk*12-2+oct+kkAlt[altkey.value];
 		console.log("a:"+noteId);
@@ -553,16 +535,16 @@ function PLAY_LOG(){
 			if(isLOGON==0)MM_DURATION=2;
 			var a={d:MM_DURATION,n:noteId,p:" "};
 		   if(a.d==99){
-		    if(MMLOG[CHNID].length>0){
-		    	a.d=MMLOG[CHNID][MMLOG[CHNID].length-1].d*4;
-		    	MMLOG[CHNID][MMLOG[CHNID].length-1].d=MMLOG[CHNID][MMLOG[CHNID].length-1].d*4/3;
+		    if(MMLOG.length>0){
+		    	a.d=MMLOG[MMLOG.length-1].d*4;
+		    	MMLOG[MMLOG.length-1].d=MMLOG[MMLOG.length-1].d*4/3;
 		    }else{
 		    	a.d=1;
 		    }
 		  }
-		   EDPOS=MMLOG[CHNID].length;
+		   EDPOS=MMLOG.length;
 		   consolelog(BEAT_CNT+":NOTE:"+a.n);
-		   MMLOG[CHNID].push(a);
+		   MMLOG.push(a);
 		   
 		 //  console.log(MMLOG);
 		   draw_noteb();
@@ -673,60 +655,6 @@ function down(){
    }
 }
 var instruments=[];
-
-
-	pending=0;
-	function loadAudio(ins_ix,url, key) {
-	
-			var base64 = url.split(',')[1];
-			  
-				var buffer = Base64Binary.decodeArrayBuffer(base64);
-				pending++;
-				actx.decodeAudioData(buffer, 
-				  function(buffer1){
-				       j=keyToNote[key];
-			        bbff[ins_ix*88+j]=	buffer1;
-					    pending--;
-		//			     console.log(ins_ix+" "+"Note:"+j+" key:"+key+"pending:"+pending);
-					},function(){
-					alert("decodeAudioData error :"+key);
-					}
-				);
-		};
-	
-
-function AddInst(){
-
-	addscript();
-		for (var key in MIDI.Soundfont) {
-
-      for(j=0;j<instruments.length;j++){
-       if(instruments[j]==key)break;
-      }
-      if(j<instruments.length){
-      	continue;
-      }else{
-      	var opt = document.createElement('option');
-    opt.value = key;
-    opt.innerHTML = key;
-    s1.appendChild(opt);
-		    instruments.push(key);
-		    instrument=instruments[j];
-	var urls = [];
-			var notes = keyToNote;
-
-			for (var key in notes) urls.push(key);
-	 for(i=0;i<urls.length;i++){
-		key=urls[i];
-	   loadAudio(j,MIDI.Soundfont[instrument][key],key );
-   }
-		   
-		    console.log("addins:"+instrument);
-		    return;  
-	    }
-	  }
-}
-
 function loadaa(){
 	 if(!keyToNote)alert( keyToNote);
 	makeNotes();
@@ -751,7 +679,7 @@ function loadaa(){
 	//tx1.value+="\nrlslen "+urls.length;
 	j=0;
 	pending=0;
-	function loadAudioa(ins_ix,url, key) {
+	function loadAudio(ins_ix,url, key) {
 	
 			var base64 = url.split(',')[1];
 			  
@@ -778,68 +706,8 @@ function loadaa(){
    }
   }
 }
-function test1(){
-	addscript();
-}
-function addscript(){
-	console.log(tx1.value);
- var script = document.createElement('script');
-					script.language = 'javascript';
-					script.type = 'text/javascript';
-			//	  var ttt="function a01(){";
-				 
-				  ttt=tx1.value;
-				//  ttt+="}";
-					script.text = ttt;
-				
-					document.body.appendChild(script);
-					ifg=1;
-			
-
-}
-
 	function load() {
-	//	myModal.style.display = "block";msdcnt=1;
-		console.log("12345");
-		 line_h=6;
-       if(window.innerHeight>600){
-      	line_h=10;
-      	drnote_div.style.height=300;
-      }else{
-     // drnote_div.height=250;
-      }
-setTimeout(load100,5000);
-	tx1.value="t=0;"
-tx1.value+="\nfor(i=60;i<72;i++){";
-tx1.value+="\n   noteon(i,1,t);";
-tx1.value+="\n   noteoff(i,t+0.05);";
-tx1.value+="\n   t+=0.2;";
-tx1.value+="\n}";
 	
-	document.getElementById('if1')
-  .addEventListener('change', getFile)
-
-function getFile(event) {
-	console.log(111);
-	const input = event.target
-  if ('files' in input && input.files.length > 0) {
-  	 const reader = new FileReader();
-
-  reader.addEventListener("load", () => {
-    // this will then display a text file
-    tx1.value = reader.result;
-   
-  }, false);
-
-  if (input.files[0]) {
-    reader.readAsText(input.files[0]);
-  }
-}
-  
-}
-//load100();
-	
-	}
 	function load100() {
 	
 		//console.log("loadaa..");
@@ -869,8 +737,8 @@ function chgEDPOS(mxx,myy){
 	       if(mxx>=xx_left){
 	         EDPOS=Math.floor(((mxx-xx_left)+(line_h/2))/(line_h*2))+xx_org;
 	         //consolelog("chg:"+EDPOS);
-	         if(EDPOS>=MMLOG[CHNID].length){
-	         	   EDPOS=MMLOG[CHNID].length-1;
+	         if(EDPOS>=MMLOG.length){
+	         	   EDPOS=MMLOG.length-1;
 	         	   //consolelog("chg1:"+EDPOS);
 	         	   if(EDPOS<0)EDPOS=0;
              
@@ -992,7 +860,7 @@ function ckeydown(ev) {
 	   if(isPOSSET==0){
 	     eett1(mxx,myy);   
 	   }else{	   
-	   	  MMLOG[CHNID][EDPOS].d=MM_DURATION;
+	   	  MMLOG[EDPOS].d=MM_DURATION;
 	      EDRR();
 	   }
 	    return;	
@@ -1021,7 +889,7 @@ octa=0;
 function ckeyup(ev) {
 	 if(msdcnt==1)return;
 	 if(ev.keyCode==37){
-	    MMLOG[CHNID].pop();
+	    MMLOG.pop();
 	    draw_noteb();
 	}
 		 if(ev.keyCode==32
@@ -1079,7 +947,7 @@ if(e==40){  //down
 	window.addEventListener('keyup',this.ckeyup,false);
 function chage_program(){
 	//alert(MIDI.instruments);
-	instrument_offset[CHNID]=s1.selectedIndex*88;
+	instrument_offset=s1.selectedIndex*88;
 }
  
   function chage_kbdwidth(){

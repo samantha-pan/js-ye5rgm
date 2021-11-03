@@ -84,8 +84,6 @@ function delNote(){
  }
  gcc=0;
  xx_org=0;
- cvs=new Array();
-for(i=0;i<3;i++) cvs[i]="canvas_n"+i;
 function draw_note(P1) {
     	
     //	const outputs = access.outputs.values();
@@ -93,46 +91,37 @@ function draw_note(P1) {
     	 
     	//alert(P1[0]);
     	i=1234;
-    	console.log(cvs);
-    	
-      var canvas = document.getElementById(cvs[CHNID]);
+      var canvas = document.getElementById("canvas_n");
       //consolelog("vs1n	:"+canvas.height);
       
-     // canvas.width=2000;
+      canvas.width=2000;
       
-      //canvas.height=200;
-     // canvas.style.top=500*CHNID;
+      canvas.height=500;
       //	consolelog("QQQQ"+gcc);
       if (canvas.getContext) {
-      
-      	trec=canvas.getBoundingClientRect();
-      	console.log(trec);
-      	canvas.width=window.innerWidth-40;
       	console.log(i);
         ctx_n = canvas.getContext("2d");
          ctx_n.clearRect(0,0, canvas.width, 400);
-// ctx_n.moveTo(0,1400);
-       //  ctx_n.lineTo(300,1400);
-        // ctx_n.stroke();
-
-       ctx_n.fillStyle = "rgb(10,10,0)";
-       ctx_n.font = "12px Arial";
-       	ctx_n.fillStyle = "rgb(0,0,0)";
-          ctx_n.fillText(instruments[INS_IX[CHNID]],10,10);
-       
-     
-       yy_line_1=line_h*5+00*CHNID;
-       console.log("yy_line_1:"+yy_line_1);	
-      for( i=0;i<line_h*5;i+=line_h){	
+ ctx_n.moveTo(0,1400);
+         ctx_n.lineTo(300,1400);
+         ctx_n.stroke();
+      // ctx_n.fillStyle = "rgb(10,10,0)";
+      // ctx_n.fillRect (10, 10, 55, 50);
+      line_h=6;
+       if(window.innerHeight>600){
+      	line_h=10;
+      }
+       yy_line_1=line_h*15;
+      for( i=0;i<line_h*5;i+=line_h){
   	   ctx_n.moveTo(10,yy_line_1+i);
-       ctx_n.lineTo( canvas.width,yy_line_1+i);
+       ctx_n.lineTo(2000,yy_line_1+i);
       	ctx_n.strokeStyle= "rgba(200,200,200,1";
         ctx_n.stroke();
         yy_line_2=yy_line_1+i;
       }
       xx=5*line_h;
       xx_org=0;
-      while((EDPOS-xx_org)*(line_h*2)>canvas.width-100){
+      while((EDPOS-xx_org)*(line_h*2)>canvasAA.width*0.6){
          xx_org++;
       }
       xx_left=xx+3*line_h;
@@ -255,7 +244,7 @@ function draw_note(P1) {
       //  console.log("bt0:"+btc);
         if(btc>=96*4){
         	var rect = canvasAA.getBoundingClientRect();
-        	consolelog("btc2:"+btc+" w:"+canvas.width+" xx:"+xx);
+        	consolelog("btc2:"+btc+" w:"+canvasAA.width+" xx:"+xx);
         	ctx_n.moveTo((line_h*3)+xx-mx,yy_line_1);
          ctx_n.lineTo ((line_h*3)+xx-mx,yy_line_1+(line_h*4));
          ctx_n.stroke();
@@ -266,7 +255,7 @@ function draw_note(P1) {
       }
       ctx_n.moveTo((line_h*4)+posxx-line_h,yy_line_1-(line_h*4));
          ctx_n.lineTo ((line_h*4)+posxx-line_h,yy_line_1+(line_h*10));
-         	ctx_n.strokeStyle= "rgba(255,0,0,0.9)";
+         	ctx_n.strokeStyle= "rgba(255,0,0,0.3)";
          ctx_n.stroke();
          console.log(posxx);
       

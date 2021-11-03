@@ -120,7 +120,13 @@ function draw_note(P1) {
        	ctx_n.fillStyle = "rgb(0,0,0)";
           ctx_n.fillText(instruments[INS_IX[CHNID]],10,10);
        
-     
+      line_h=6;
+       if(window.innerHeight>600){
+      	line_h=10;
+      	drnote_div.style.height=300;
+      }else{
+     // drnote_div.height=250;
+      }
        yy_line_1=line_h*5+00*CHNID;
        console.log("yy_line_1:"+yy_line_1);	
       for( i=0;i<line_h*5;i+=line_h){	

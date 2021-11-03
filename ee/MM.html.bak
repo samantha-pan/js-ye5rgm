@@ -51,7 +51,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 	
 	<script type=text/javascript src="Base64binary.js"></script>
    	
-  <script src="midipiano.js" type="text/javascript"></script>
+  <script src="midipianoA.js" type="text/javascript"></script>
   <script src="drawnote.js" type="text/javascript"></script>
   <script>
    function draw_notea(){
@@ -174,7 +174,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
 <input id="if1" type="file" name="datafile" size="40">
 <br>
 <textarea id="tx1" rows="20" cols="100">aaaaaaaaaa</textarea> <button onclick="test1();">exec </button>
- <button onclick="AddInst();">AddINST </button>
  </div>
 
 </div>

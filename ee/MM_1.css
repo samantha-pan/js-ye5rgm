@@ -1,0 +1,29 @@
+.modalWindow {
+		position: fixed;
+		font-family: arial;
+		font-size:80%;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: rgba(255,255,255,1);
+		z-index: 99999;
+		opacity:0;
+		-webkit-transition: opacity 400ms ease-in;
+		-moz-transition: opacity 400ms ease-in;
+		transition: opacity 400ms ease-in;
+		pointer-events: none;
+	}
+	.modalWindow:target {
+		opacity:1;
+		pointer-events: auto;
+	}
+	
+	.close {
+		position: absolute;
+		right: 15px;
+		top: 5px;
+		width: 22px;
+		height: 22px;
+		font-size: 10px;
+	}
