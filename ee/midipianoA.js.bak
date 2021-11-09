@@ -1,9 +1,9 @@
  	window.navigator.standalone;
  	
   oct=0;
-  keyshift=4;
+  keyshift=0;
   bnWIDTH=60;
-  	octk=4;
+  	octk=3;
   	BW=0.9;
   	kbWidth=60;
   	kbHeight=120;
@@ -65,8 +65,8 @@ eettFG=0;
   	   if(keyStart.length>0){
   	   	 consolelog("wKL:"+keyStart.length);
   	   	for(i=0;i<keyStart.length;i++){
-  	   		consolelog("L0:"+i);
-  	   	   consolelog("L1:"+keyStart[i]);
+  	   		consolelog("L:"+i);
+  	   	   consolelog("L:"+keyStart[i]);
   	   	   keyoff(keyStart[i]);
   	   	   dnKey[keyStart[i]]=0;
   	   	   
@@ -159,8 +159,8 @@ eettFG=1;
          if(playNote0>0)noteoff(noteoff);
 		     
 		     a=MMLOG[CHNID][EDPOS];
-         playNote0=a.n[0];
-         noteon(a.n[0],126,0);
+         playNote0=a.n;
+         noteon(a.n,126,0);
       draw_note();
       EDPOS++;
       //consolelog("POS:"+EDPOS);
@@ -183,7 +183,7 @@ eettFG=1;
 	  continue;
 	}
 	if(playMode==0)	eett1(xx,yy);
-  //chgEDPOS(xx,yy);
+  chgEDPOS(xx,yy);
  }
  e.preventDefault();
 }
@@ -233,7 +233,6 @@ bhh=document.body.offsetHeight;
      e=KM[tKey];
      if(dnKey[e]==0){
      	 dnKey[e]=1;
-     	 consolelog("te:"+e);
        keyPlay=e;
       //alert(keyPlay);
        keyon(e);
@@ -272,8 +271,7 @@ for(i=0;i<10;i++)INS_IX[i]=0;
      canvas.height=window.innerHeight-10;
      canvas.top=0;
      if(window.innerHeight>600){
-       kbHeight=220;
-       kbWidth=80;
+       kbHeight=150;
     }else{
     	//octk=4;
     }
@@ -642,7 +640,6 @@ logtext="";
 		    }
 		  }
 		  if(EDPOS<MMLOG[CHNID].length-1){
-		  	consolelog("EDPOS<:"+EDPOS);
        if(insMode==1 ){
                console.log("ins:"+EDPOS+" "+MMLOG[CHNID].length);
             MMLOG[CHNID].splice(EDPOS, 0, a);
@@ -670,9 +667,9 @@ logtext="";
      	  }
      	  if(ok==0){
      	   MMLOG[CHNID].push(a);
-     	    consolelog("bb:"+noteId);     
+     	    consolelog("b:"+noteId);
+		     EDPOS=MMLOG[CHNID].length;
 		    }
-		    EDPOS=MMLOG[CHNID].length;
 		   }
 		   
 		 //  console.log(MMLOG);
@@ -1012,10 +1009,10 @@ function chgEDPOS(mxx,myy){
 	    if(myy>=yy_line_1-line_h*5 && myy<=yy_line_2+line_h*5){
 	       if(mxx>=xx_left){
 	         EDPOS=Math.floor(((mxx-xx_left)+(line_h/2))/(line_h*2))+xx_org;
-	         consolelog("chg:"+EDPOS);
+	         //consolelog("chg:"+EDPOS);
 	         if(EDPOS>=MMLOG[CHNID].length){
 	         	   EDPOS=MMLOG[CHNID].length-1;
-	         	   consolelog("chg1:"+EDPOS);
+	         	   //consolelog("chg1:"+EDPOS);
 	         	   if(EDPOS<0)EDPOS=0;
              
 	        }
@@ -1158,7 +1155,7 @@ function ckeydown(ev) {
    if(nlv[e]){
     //v="144,"+ (nlv[e]+oct+octa+skey)+",100";
   //console.log(nlv[e]);
-  if(dnKey[e]==0)keyon(nlv[e]-36+2);//+oct+octa+skey);
+  if(dnKey[e]==0)keyon(nlv[e]-24+2);//+oct+octa+skey);
 dnKey[e]=1;
  }
 
@@ -1212,7 +1209,7 @@ if(e==40){  //down
     
   //console.log(nlv[e]);
    if(nlv[e]){  
-  if(dnKey[e]==1)keyoff(nlv[e]-36+2);//+oct+octa+skey);
+  if(dnKey[e]==1)keyoff(nlv[e]-24+2);//+oct+octa+skey);
   // O.send(JSON.parse(v));
   //websocketConnection.send(v);
    //ExampleSocket.send("abcde\n");
